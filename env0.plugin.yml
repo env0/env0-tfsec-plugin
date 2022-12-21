@@ -1,0 +1,22 @@
+name: tfsec
+icon: https://aquasecurity.github.io/tfsec/v1.28.1/imgs/tfsec.png
+inputs:
+  version:
+    description: The specific version of tfsec you wish to use
+    required: true
+  directory:
+    description: The IaC directory you want to analyze with tfsec
+    required: true
+  flags:
+    description: Additional tfsec flags
+run:
+  exec: |
+    echo TFSEC_VERSION="${inputs.version}" >> $ENV0_ENV
+    echo TFSEC_INSTALL_PATH="/home/node/.local/bin" >> $ENV0_ENV
+    
+    if [ "${TFSEC_VERSION}" == "latest" ]; then echo "This plugin requires a specific tfsec version" && exit 2; fi
+    
+    mkdir -p ${TFSEC_INSTALL_PATH}
+    curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+    
+    tfsec ${inputs.directory} ${inputs.flags}
