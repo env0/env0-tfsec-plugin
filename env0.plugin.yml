@@ -17,6 +17,6 @@ run:
     if [ "${TFSEC_VERSION}" == "latest" ]; then echo "This plugin requires a specific tfsec version" && exit 2; fi
     
     mkdir -p ${TFSEC_INSTALL_PATH}
-    curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | sed 's/-c $checksum_file --quiet/-s $checksum_file/' | bash
+    curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | sed 's/-c $checksum_file --quiet --ignore-missing/-s $checksum_file/' | bash
     
     tfsec ${inputs.directory} ${inputs.flags}
