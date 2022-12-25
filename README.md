@@ -14,7 +14,7 @@ Due to rate limits - we do not allow to use `tfsec` with the latest version and 
 
 The tfsec plugin accepts the following inputs:
 
-* `version` (required) - the specific version of tflint you wish to use 
+* `version` (required) - the specific version of tfsec you wish to use 
 
 * `directory` (required) - the path to the directory with the IaC code to analyze (the root folder is your project's root folder)
 
