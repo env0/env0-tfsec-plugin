@@ -45,4 +45,4 @@ deploy:
 
 ## Further Reading
 
-You can read more about `tflint` and the available flags [here](https://github.com/aquasecurity/tfsec#usage).
+You can read more about `tfsec` and the available flags [here](https://github.com/aquasecurity/tfsec#usage).
