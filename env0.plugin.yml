@@ -11,8 +11,8 @@ inputs:
     description: Additional tfsec flags
 run:
   exec: |
-    echo TFSEC_VERSION="${inputs.version}" >> $ENV0_ENV
-    echo TFSEC_INSTALL_PATH="/home/node/.local/bin" >> $ENV0_ENV
+    export TFSEC_VERSION="${inputs.version}"
+    export TFSEC_INSTALL_PATH="/home/node/.local/bin"
     
     if [ "${TFSEC_VERSION}" == "latest" ]; then echo "This plugin requires a specific tfsec version" && exit 2; fi
     
