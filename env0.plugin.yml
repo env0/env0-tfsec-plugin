@@ -19,4 +19,12 @@ run:
     mkdir -p ${TFSEC_INSTALL_PATH}
     curl -s "https://raw.githubusercontent.com/aquasecurity/tfsec/${TFSEC_VERSION}/scripts/install_linux.sh" | sed 's/sha256sum -c.*/true/' | bash
     
-    tfsec ${inputs.directory} ${inputs.flags}
+    tfsec ${inputs.directory} ${inputs.flags} --format lovely,markdown --out output 2>&1; echo $? > error_code.txt
+    cat output.markdown >> $ENV0_STEP_CONTENT
+    if grep -q '0' error_code.txt; then
+      printf "\x1b[32mCheck Pass\x1b[0m" >> $ENV0_STEP_SUMMARY
+      exit 0
+    else
+      printf "\x1b[31mScan failed\x1b[0m" >> $ENV0_STEP_SUMMARY
+      exit 1
+    fi
