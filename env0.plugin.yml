@@ -16,7 +16,16 @@ run:
     
     if [ "${TFSEC_VERSION}" == "latest" ]; then echo "This plugin requires a specific tfsec version" && exit 2; fi
     
-    mkdir -p ${TFSEC_INSTALL_PATH}
-    curl -s "https://raw.githubusercontent.com/aquasecurity/tfsec/${TFSEC_VERSION}/scripts/install_linux.sh" | sed 's/sha256sum -c.*/true/' | bash
-    
-    tfsec ${inputs.directory} ${inputs.flags}
+    case "$(uname -m)" in
+      x86_64) TFSEC_ARCH=amd64 ;;
+      aarch64|arm64) TFSEC_ARCH=arm64 ;;
+      *) echo "Unsupported architecture: $(uname -m)" && exit 2 ;;
+    esac
+
+    # Download the release binary directly, retrying GitHub errors such as 504, and stop with the URL if it still fails
+    TFSEC_URL="https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION#v}/tfsec-linux-${TFSEC_ARCH}"
+    mkdir -p "${TFSEC_INSTALL_PATH}"
+    curl --retry 5 --retry-all-errors -fsSL -o "${TFSEC_INSTALL_PATH}/tfsec" "${TFSEC_URL}" || { echo "Couldn't download ${TFSEC_URL}" >&2; exit 1; }
+    chmod +x "${TFSEC_INSTALL_PATH}/tfsec"
+
+    "${TFSEC_INSTALL_PATH}/tfsec" ${inputs.directory} ${inputs.flags}
